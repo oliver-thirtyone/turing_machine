@@ -10,6 +10,12 @@ import turingmachine.model.entities.Transition;
 
 public interface ITuringMachine {
 
+	public String getName();
+
+	public void setInput(String string);
+
+	public String getOutput();
+
 	public void reset();
 
 	public Boolean transition();
@@ -19,9 +25,5 @@ public interface ITuringMachine {
 	public Transition getCurrentTransition();
 
 	public Integer getTransitionCount();
-
-	public void setInput(String string);
-
-	public String getOutput();
 
 }

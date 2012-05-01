@@ -1,12 +1,16 @@
-package turingmachine.model.entities;
+package turingmachine.model;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import turingmachine.model.entities.Alphabet;
+import turingmachine.model.entities.State;
+import turingmachine.model.entities.Tape;
+import turingmachine.model.entities.Transition;
 
-public class TuringConfiguration {
+public abstract class AbstractTuringMachine implements ITuringMachine {
 
 	private final String name;
 	private final Alphabet alphabet;
@@ -19,7 +23,7 @@ public class TuringConfiguration {
 	private final Map<String, Tape> tapes;
 	private final Map<State, Collection<Transition>> transitions;
 
-	public TuringConfiguration(String name, Alphabet alphabet, String initialStateName, String inputTapeName, String outputTapeName) {
+	public AbstractTuringMachine(String name, Alphabet alphabet, String initialStateName, String inputTapeName, String outputTapeName) {
 		this.name = name;
 		this.alphabet = alphabet;
 
@@ -32,6 +36,7 @@ public class TuringConfiguration {
 		this.transitions = new LinkedHashMap<State, Collection<Transition>>();
 	}
 
+	@Override
 	public String getName() {
 		return this.name;
 	}

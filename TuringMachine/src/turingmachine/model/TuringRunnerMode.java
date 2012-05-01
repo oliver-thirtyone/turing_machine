@@ -3,10 +3,10 @@
  * @version $Revision: $
  * @date $Date: $
  */
-package turingmachine.model.entities;
+package turingmachine.model;
 
 public enum TuringRunnerMode {
 
-	RUN, STEP, PAUSE, STOP;
+	NOT_READY, READY, RUN, STEP, PAUSE, STOP;
 
 }

@@ -1,4 +1,4 @@
-package turingmachine.model;
+package turingmachine.model.entities;
 
 import junit.framework.Assert;
 

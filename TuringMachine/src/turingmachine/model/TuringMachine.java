@@ -5,34 +5,37 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Observable;
+import java.util.Observer;
 
+import turingmachine.model.entities.Alphabet;
 import turingmachine.model.entities.State;
 import turingmachine.model.entities.Tape;
 import turingmachine.model.entities.TapeMotion;
 import turingmachine.model.entities.TapeTransition;
 import turingmachine.model.entities.Transition;
-import turingmachine.model.entities.TuringConfiguration;
+import turingmachine.util.ObservableObject;
 
-public class TuringMachine extends Observable implements ITuringMachine {
+public class TuringMachine extends AbstractTuringMachine {
 
-	private final TuringConfiguration turingConfiguration;
+	private final ObservableObject<State> currentState;
+	private final ObservableObject<Transition> currentTransition;
+	private final ObservableObject<Integer> transitionCount;
 
-	private State currentState;
-	private Transition currentTransition;
-	private Integer transitionCount;
+	public TuringMachine(String name, Alphabet alphabet, String initialStateName, String inputTapeName, String outputTapeName) {
+		super(name, alphabet, initialStateName, inputTapeName, outputTapeName);
 
-	public TuringMachine(TuringConfiguration turingConfiguration) {
-		this.turingConfiguration = turingConfiguration;
-		this.reset();
+		this.currentState = new ObservableObject<State>();
+		this.currentTransition = new ObservableObject<Transition>();
+		this.transitionCount = new ObservableObject<Integer>();
 	}
 
 	@Override
 	public synchronized void reset() {
-		this.currentState = this.getConfiguration().getInitialState();
-		this.currentTransition = null;
-		this.transitionCount = 0;
+		this.setCurrentState(this.getInitialState());
+		this.setCurrentTransition(null);
+		this.setTransitionCount(0);
 
-		for (Tape tape : this.getConfiguration().getTapes()) {
+		for (Tape tape : this.getTapes()) {
 			tape.reset();
 		}
 	}
@@ -42,10 +45,9 @@ public class TuringMachine extends Observable implements ITuringMachine {
 		Boolean successful = Boolean.FALSE;
 		String token = this.getToken();
 
-		Collection<Transition> transitions = this.getConfiguration().getTransitions(this.getCurrentState());
+		Collection<Transition> transitions = this.getTransitions(this.getCurrentState());
 		for (Transition transition : transitions) {
 			if (transition.getToken().equals(token)) {
-				System.out.println("-> " + transition.getToken() + " = " + token);
 				this.setCurrentTransition(transition);
 
 				Collection<TapeTransition> tapeTransitions = transition.getTapeTransitions();
@@ -53,7 +55,7 @@ public class TuringMachine extends Observable implements ITuringMachine {
 					Tape tape = tapeTransition.getTape();
 
 					// TODO: Remove paranoid checks?
-					if (!this.getConfiguration().getTapes().contains(tape)) {
+					if (!this.getTapes().contains(tape)) {
 						throw new RuntimeException("Something went terribly wrong. This tape is not part of this Turing Machine.");
 					}
 					if ((tapeTransition.getRead() == null && tape.read() != null) || (tapeTransition.getRead() != null && !tapeTransition.getRead().equals(tape.read()))) {
@@ -67,7 +69,6 @@ public class TuringMachine extends Observable implements ITuringMachine {
 
 				this.setCurrentState(transition.getNextState());
 				this.increaseTransitionCount();
-				this.notifyObservers();
 
 				successful = Boolean.TRUE;
 				break;
@@ -79,42 +80,42 @@ public class TuringMachine extends Observable implements ITuringMachine {
 
 	@Override
 	public State getCurrentState() {
-		return this.currentState;
+		return this.currentState.get();
 	}
 
-	public void setCurrentState(State state) {
-		this.currentState = state;
-		this.setChanged();
+	private void setCurrentState(State state) {
+		this.currentState.set(state);
+		this.currentState.notifyObservers();
 	}
 
 	@Override
 	public Transition getCurrentTransition() {
-		return this.currentTransition;
+		return this.currentTransition.get();
 	}
 
-	public void setCurrentTransition(Transition currentTransition) {
-		this.currentTransition = currentTransition;
-		this.setChanged();
+	private void setCurrentTransition(Transition transition) {
+		this.currentTransition.set(transition);
+		this.currentTransition.notifyObservers();
 	}
 
 	@Override
 	public Integer getTransitionCount() {
-		return this.transitionCount;
+		return this.transitionCount.get();
 	}
 
-	public void increaseTransitionCount() {
-		this.transitionCount++;
-		this.setChanged();
+	private void setTransitionCount(Integer transitionCount) {
+		this.transitionCount.set(transitionCount);
+		this.transitionCount.notifyObservers();
 	}
 
-	public TuringConfiguration getConfiguration() {
-		return this.turingConfiguration;
+	private void increaseTransitionCount() {
+		this.setTransitionCount(this.getTransitionCount() + 1);
 	}
 
 	@Override
 	public void setInput(String input) {
 		char[] characters = input.toCharArray();
-		Tape tape = this.getConfiguration().getInputTape();
+		Tape tape = this.getInputTape();
 
 		// Add all characters to the right side of the tape
 		for (int i = characters.length; i > 0; i--) {
@@ -124,13 +125,14 @@ public class TuringMachine extends Observable implements ITuringMachine {
 
 		// Select the first character
 		tape.moveCursor(TapeMotion.R);
+		tape.notifyObservers();
 	}
 
 	@Override
 	public String getOutput() {
 		StringBuilder stringBuilder = new StringBuilder();
 
-		Tape tape = this.getConfiguration().getOutputTape();
+		Tape tape = this.getOutputTape();
 		List<Character> characters = tape.getTape();
 
 		for (Character character : characters) {
@@ -142,10 +144,37 @@ public class TuringMachine extends Observable implements ITuringMachine {
 		return stringBuilder.toString();
 	}
 
+	public Observable addStateOberserver(Observer observer) {
+		this.currentState.addObserver(observer);
+		return this.currentState;
+	}
+
+	public void deleteStateOberserver(Observer observer) {
+		this.currentState.deleteObserver(observer);
+	}
+
+	public Observable addTransitionOberserver(Observer observer) {
+		this.currentTransition.addObserver(observer);
+		return this.currentTransition;
+	}
+
+	public void deleteTransitionOberserver(Observer observer) {
+		this.currentTransition.deleteObserver(observer);
+	}
+
+	public Observable addTransitionCountOberserver(Observer observer) {
+		this.transitionCount.addObserver(observer);
+		return this.transitionCount;
+	}
+
+	public void deleteTransitionCountOberserver(Observer observer) {
+		this.transitionCount.deleteObserver(observer);
+	}
+
 	private synchronized String getToken() {
 		Map<String, Character> tapeReads = new LinkedHashMap<String, Character>();
 
-		for (Tape tape : this.getConfiguration().getTapes()) {
+		for (Tape tape : this.getTapes()) {
 			tapeReads.put(tape.getName(), tape.read());
 		}
 

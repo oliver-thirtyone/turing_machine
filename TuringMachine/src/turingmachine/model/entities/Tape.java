@@ -114,13 +114,19 @@ public class Tape extends Observable {
 	}
 
 	private void setCurrentCharacter(Character currentCharacter) {
+		if (this.currentCharacter == currentCharacter) {
+			return;
+		}
+
 		this.currentCharacter = currentCharacter;
-		System.out.println(this); // TODO: REMOVE
+		this.setChanged();
 	}
 
 	private void moveCursor(TapeMotion direction, Stack<Character> pushToStack, Stack<Character> popFromStack) {
 		pushToStack.push(this.currentCharacter);
 		this.setCurrentCharacter(popFromStack.isEmpty() ? null : popFromStack.pop());
+
+		this.setChanged();
 	}
 
 }

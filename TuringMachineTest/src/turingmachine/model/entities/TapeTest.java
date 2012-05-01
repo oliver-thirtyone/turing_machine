@@ -3,7 +3,7 @@
  * @version $Revision: $
  * @date $Date: $
  */
-package turingmachine.model;
+package turingmachine.model.entities;
 
 
 import org.junit.Assert;

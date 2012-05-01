@@ -1,4 +1,4 @@
-package turingmachine.model.alphabet;
+package turingmachine.model.entities;
 
 import org.junit.Assert;
 import org.junit.Test;
