@@ -6,7 +6,7 @@
 		<state name='Q1' final="true" />
 	</states>
 
-	<tapes input-tape-name="T0" output-tape-name="T1">
+	<tapes input-tape-name="T0">
 		<tape name='T0' />
 		<tape name='T1' />
 	</tapes>

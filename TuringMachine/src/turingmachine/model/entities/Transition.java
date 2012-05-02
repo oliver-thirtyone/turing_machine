@@ -58,7 +58,7 @@ public class Transition {
 		return Boolean.TRUE;
 	}
 
-	public static String getToken(Map<String, Character> tapeReads) {
+	public static final String getToken(Map<String, Character> tapeReads) {
 		StringBuilder stringBuilder = new StringBuilder();
 
 		for (String tapeName : tapeReads.keySet()) {
@@ -74,6 +74,54 @@ public class Transition {
 		}
 
 		return stringBuilder.toString();
+	}
+
+	@Override
+	public int hashCode() {
+		int result = 1;
+		result = 31 * result + ((this.currentState == null) ? 0 : this.currentState.hashCode());
+		result = 31 * result + ((this.nextState == null) ? 0 : this.nextState.hashCode());
+		result = 31 * result + ((this.tapeTransitions == null) ? 0 : this.tapeTransitions.hashCode());
+		result = 31 * result + ((this.token == null) ? 0 : this.token.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null || this.getClass() != obj.getClass()) {
+			return false;
+		}
+
+		Transition other = (Transition) obj;
+		if (this.currentState == null && other.currentState != null) {
+			return false;
+		}
+		else if (!this.currentState.equals(other.currentState)) {
+			return false;
+		}
+		if (this.nextState == null && other.nextState != null) {
+			return false;
+		}
+		else if (!this.nextState.equals(other.nextState)) {
+			return false;
+		}
+		if (this.tapeTransitions == null && other.tapeTransitions != null) {
+			return false;
+		}
+		else if (!this.tapeTransitions.equals(other.tapeTransitions)) {
+			return false;
+		}
+		if (this.token == null && other.token != null) {
+			return false;
+		}
+		else if (!this.token.equals(other.token)) {
+			return false;
+		}
+
+		return true;
 	}
 
 	private synchronized void renewToken() {

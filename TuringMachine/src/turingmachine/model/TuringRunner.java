@@ -74,12 +74,12 @@ public class TuringRunner extends Observable implements Runnable, ITuringRunner 
 	}
 
 	@Override
-	public synchronized Boolean init(ITuringMachine turingMachine, String input) {
-		return this.init(turingMachine, input, null);
+	public synchronized Boolean initialize(ITuringMachine turingMachine, String input) {
+		return this.initialize(turingMachine, input, null);
 	}
 
 	@Override
-	public synchronized Boolean init(ITuringMachine turingMachine, String input, Integer transitionDelay) {
+	public synchronized Boolean initialize(ITuringMachine turingMachine, String input, Integer transitionDelay) {
 		Boolean successful = Boolean.FALSE;
 
 		switch (this.getMode()) {

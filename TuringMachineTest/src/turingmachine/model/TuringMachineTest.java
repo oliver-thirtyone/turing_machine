@@ -61,7 +61,7 @@ public class TuringMachineTest {
 		this.alphabet.addSymbol('0');
 		this.alphabet.addSymbol('+');
 
-		TuringMachine turingMachine = new TuringMachine("TuringMachineTest", this.alphabet, "initialState", "inputTape", "outputTape");
+		TuringMachine turingMachine = new TuringMachine();
 
 		this.initialState = new State("initialState");
 		turingMachine.addState(this.initialState);
@@ -97,6 +97,7 @@ public class TuringMachineTest {
 		this.inputTape.addObserver(this.inputTapeObserverMock);
 		this.outputTape.addObserver(this.outputTapeObserverMock);
 
+		Assert.assertTrue(turingMachine.initialize("TuringMachineTest", this.alphabet, this.initialState, this.inputTape, this.outputTape));
 		this.turingMachine = turingMachine;
 	}
 
@@ -107,8 +108,6 @@ public class TuringMachineTest {
 		Assert.assertEquals("inputTape:" + this.alphabet.getHiddenCharacter('B') + "|outputTape:" + this.alphabet.getHiddenCharacter('B') + "", this.blankTransition.getToken());
 
 		// /////////////////////////////////////////////////////////////////////////////
-
-		this.turingMachine.reset();
 
 		Assert.assertEquals(this.initialState, this.turingMachine.getCurrentState());
 		Assert.assertEquals(null, this.turingMachine.getCurrentTransition());

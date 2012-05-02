@@ -4,13 +4,13 @@
 	<xsd:element name="turingMachine">
 		<xsd:complexType>
 			<xsd:sequence>
-				<xsd:element ref="states"		minOccurs="1"	maxOccurs="1" />
-				<xsd:element ref="tapes"		minOccurs="1"	maxOccurs="1" />
-				<xsd:element ref="alphabet"		minOccurs="1"	maxOccurs="1" />
-				<xsd:element ref="transitions"	minOccurs="1"	maxOccurs="1" />
+				<xsd:element ref="states"       minOccurs="1" maxOccurs="1" />
+				<xsd:element ref="tapes"        minOccurs="1" maxOccurs="1" />
+				<xsd:element ref="alphabet"     minOccurs="1" maxOccurs="1" />
+				<xsd:element ref="transitions"  minOccurs="1" maxOccurs="1" />
 			</xsd:sequence>
 
-			<xsd:attribute name="name"	type="xsd:string"	use="required" />
+			<xsd:attribute name="name" type="xsd:string" use="required" />
 		</xsd:complexType>
 	</xsd:element>
 
@@ -18,51 +18,64 @@
 		<xsd:element name="states">
 			<xsd:complexType>
 				<xsd:sequence>
-					<xsd:element name="initial-state"	type="stateType"	minOccurs="1"	maxOccurs="1" />
-					<xsd:element name="state"			type="stateType"	minOccurs="0"	maxOccurs="unbounded" />
-					<xsd:element name="final-state"		type="stateType"	minOccurs="1"	maxOccurs="unbounded" />
+					<xsd:element ref="state" minOccurs="1" maxOccurs="unbounded" />
 				</xsd:sequence>
+
+				<xsd:attribute name="initial-state-name" type="xsd:string" use="required" />
 			</xsd:complexType>
 		</xsd:element>
 
-		<xsd:complexType name="stateType">
-			<xsd:attribute name="name"	type="xsd:string"	use="required" />
-		</xsd:complexType>
+			<xsd:element name="state">
+				<xsd:complexType>
+					<xsd:attribute name="name"  type="xsd:string"  use="required" />
+					<xsd:attribute name="final" type="xsd:boolean" use="optional" />
+				</xsd:complexType>
+			</xsd:element>
 
 		<!-- TAPES -->
 		<xsd:element name="tapes">
 			<xsd:complexType>
 				<xsd:sequence>
-					<xsd:element name="input-tape"	type="tapeType"	minOccurs="1"	maxOccurs="1" />
-					<xsd:element name="tape"		type="tapeType"	minOccurs="0"	maxOccurs="unbounded" />
-					<xsd:element name="output-tape"	type="tapeType"	minOccurs="1"	maxOccurs="unbounded" />
+					<xsd:element ref="tape" minOccurs="1" maxOccurs="unbounded" />
 				</xsd:sequence>
+
+				<xsd:attribute name="input-tape-name"  type="xsd:string" use="required" />
+				<xsd:attribute name="output-tape-name" type="xsd:string" use="required" />
 			</xsd:complexType>
 		</xsd:element>
 
-		<xsd:complexType name="tapeType">
-			<xsd:attribute name="name"	type="xsd:string"	use="required" />
-		</xsd:complexType>
+			<xsd:element name="tape">
+				<xsd:complexType>
+					<xsd:attribute name="name"  type="xsd:string"  use="required" />
+				</xsd:complexType>
+			</xsd:element>
 
 		<!-- ALPHABET -->
 		<xsd:element name="alphabet">
 			<xsd:complexType>
 				<xsd:sequence>
-					<xsd:element name="blank-symbol"	type="symbolType"	minOccurs="1"	maxOccurs="1" />
-					<xsd:element name="symbol"			type="symbolType"	minOccurs="1"	maxOccurs="unbounded" />
+					<xsd:element name="blank-symbol" type="symbolType" minOccurs="1" maxOccurs="1" />
+					<xsd:element name="symbol"       type="symbolType" minOccurs="1" maxOccurs="unbounded" />
 				</xsd:sequence>
 			</xsd:complexType>
 		</xsd:element>
 
-		<xsd:complexType name="symbolType">
-			<xsd:attribute name="value"	type="xsd:string"	use="required" />
-		</xsd:complexType>
+			<xsd:complexType name="symbolType">
+				<xsd:attribute name="value" type="characterType" use="required" />
+			</xsd:complexType>
+
+				<xsd:simpleType name="characterType">
+					<xsd:restriction base="xsd:string">
+						<xsd:minLength value="1" />
+						<xsd:maxLength value="1" />
+					</xsd:restriction>
+				</xsd:simpleType>
 
 		<!-- TRANSITIONS -->
 		<xsd:element name="transitions">
 			<xsd:complexType>
 				<xsd:sequence>
-					<xsd:element ref="transition"	minOccurs="1"	maxOccurs="unbounded" />
+					<xsd:element ref="transition" minOccurs="1" maxOccurs="unbounded" />
 				</xsd:sequence>
 			</xsd:complexType>
 		</xsd:element>
@@ -70,26 +83,26 @@
 			<xsd:element name="transition">
 				<xsd:complexType>
 					<xsd:sequence>
-						<xsd:element name="tape-transition"	type="tapeTransitionType"	minOccurs="2"	maxOccurs="unbounded" />
+						<xsd:element name="tape-transition" type="tapeTransitionType" minOccurs="2" maxOccurs="unbounded" />
 					</xsd:sequence>
-					<xsd:attribute name="current-state"	type="xsd:string"	use="required" />
-					<xsd:attribute name="next-state"	type="xsd:string"	use="required" />
+					<xsd:attribute name="current-state" type="xsd:string" use="required" />
+					<xsd:attribute name="next-state"    type="xsd:string" use="required" />
 				</xsd:complexType>
 			</xsd:element>
 
-			<xsd:complexType name="tapeTransitionType">
-				<xsd:attribute name="tape"		type="xsd:string"	use="required" />
-				<xsd:attribute name="read"		type="xsd:string"	use="required" />
-				<xsd:attribute name="write"		type="xsd:string"	use="required" />
-				<xsd:attribute name="motion"	type="motionType"	use="required" />
-			</xsd:complexType>
+				<xsd:complexType name="tapeTransitionType">
+					<xsd:attribute name="tape"         type="xsd:string"    use="required" />
+					<xsd:attribute name="read-symbol"  type="characterType" use="required" />
+					<xsd:attribute name="write-symbol" type="characterType" use="required" />
+					<xsd:attribute name="tape-motion"  type="motionType"    use="required" />
+				</xsd:complexType>
 
-				<xsd:simpleType name="motionType">
-					<xsd:restriction base="xsd:string">
-						<xsd:enumeration value="L" />
-						<xsd:enumeration value="R" />
-						<xsd:enumeration value="S" />
-					</xsd:restriction>
-				</xsd:simpleType>
+					<xsd:simpleType name="motionType">
+						<xsd:restriction base="xsd:string">
+							<xsd:enumeration value="L" />
+							<xsd:enumeration value="R" />
+							<xsd:enumeration value="S" />
+						</xsd:restriction>
+					</xsd:simpleType>
 
 </xsd:schema>

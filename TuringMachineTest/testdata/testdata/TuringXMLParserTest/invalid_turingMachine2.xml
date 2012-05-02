@@ -20,7 +20,7 @@
 	<transitions>
 		<!-- Read '0': Add one '0' -->
 		<transition current-state='Q0' next-state='Q0'>
-			<tape-transition tape='T0' read-symbol='0' write-symbol='B' tape-motion='R' />
+			<tape-transition tape='T3' read-symbol='0' write-symbol='B' tape-motion='R' />
 			<tape-transition tape='T1' read-symbol='B' write-symbol='0' tape-motion='R' />
 		</transition>
 

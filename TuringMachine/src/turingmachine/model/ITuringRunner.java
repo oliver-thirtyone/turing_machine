@@ -11,9 +11,9 @@ public interface ITuringRunner extends Runnable {
 
 	public Boolean reset();
 
-	public Boolean init(ITuringMachine turingMachine, String input);
+	public Boolean initialize(ITuringMachine turingMachine, String input);
 
-	public Boolean init(ITuringMachine turingMachine, String input, Integer transitionDelay);
+	public Boolean initialize(ITuringMachine turingMachine, String input, Integer transitionDelay);
 
 	public Boolean start();
 

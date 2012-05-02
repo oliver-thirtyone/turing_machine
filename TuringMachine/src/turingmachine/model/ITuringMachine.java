@@ -10,15 +10,19 @@ import turingmachine.model.entities.Transition;
 
 public interface ITuringMachine {
 
-	public String getName();
+	public Boolean reset();
+
+	public Boolean transition();
+
+	// /////////////////////////////////////
 
 	public void setInput(String string);
 
 	public String getOutput();
 
-	public void reset();
+	// /////////////////////////////////////
 
-	public Boolean transition();
+	public String getName();
 
 	public State getCurrentState();
 

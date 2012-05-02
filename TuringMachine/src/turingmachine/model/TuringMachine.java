@@ -7,7 +7,6 @@ import java.util.Map;
 import java.util.Observable;
 import java.util.Observer;
 
-import turingmachine.model.entities.Alphabet;
 import turingmachine.model.entities.State;
 import turingmachine.model.entities.Tape;
 import turingmachine.model.entities.TapeMotion;
@@ -21,16 +20,14 @@ public class TuringMachine extends AbstractTuringMachine {
 	private final ObservableObject<Transition> currentTransition;
 	private final ObservableObject<Integer> transitionCount;
 
-	public TuringMachine(String name, Alphabet alphabet, String initialStateName, String inputTapeName, String outputTapeName) {
-		super(name, alphabet, initialStateName, inputTapeName, outputTapeName);
-
+	public TuringMachine() {
 		this.currentState = new ObservableObject<State>();
 		this.currentTransition = new ObservableObject<Transition>();
 		this.transitionCount = new ObservableObject<Integer>();
 	}
 
 	@Override
-	public synchronized void reset() {
+	public synchronized Boolean doReset() {
 		this.setCurrentState(this.getInitialState());
 		this.setCurrentTransition(null);
 		this.setTransitionCount(0);
@@ -38,10 +35,12 @@ public class TuringMachine extends AbstractTuringMachine {
 		for (Tape tape : this.getTapes()) {
 			tape.reset();
 		}
+
+		return Boolean.TRUE;
 	}
 
 	@Override
-	public synchronized Boolean transition() {
+	public synchronized Boolean doTransition() {
 		Boolean successful = Boolean.FALSE;
 		String token = this.getToken();
 

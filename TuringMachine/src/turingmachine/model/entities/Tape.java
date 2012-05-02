@@ -109,6 +109,53 @@ public class Tape extends Observable {
 		return stringBuilder.toString();
 	}
 
+	@Override
+	public int hashCode() {
+		int result = 1;
+		result = 31 * result + ((this.currentCharacter == null) ? 0 : this.currentCharacter.hashCode());
+		result = 31 * result + ((this.leftCharacters == null) ? 0 : this.leftCharacters.hashCode());
+		result = 31 * result + ((this.name == null) ? 0 : this.name.hashCode());
+		result = 31 * result + ((this.rightCharacters == null) ? 0 : this.rightCharacters.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null || this.getClass() != obj.getClass()) {
+			return false;
+		}
+
+		Tape other = (Tape) obj;
+		if (this.currentCharacter == null && other.currentCharacter != null) {
+			return false;
+		}
+		else if (!this.currentCharacter.equals(other.currentCharacter)) {
+			return false;
+		}
+		if (this.leftCharacters == null && other.leftCharacters != null) {
+			return false;
+		}
+		else if (!this.leftCharacters.equals(other.leftCharacters)) {
+			return false;
+		}
+		if (this.name == null && other.name != null) {
+			return false;
+		}
+		else if (!this.name.equals(other.name)) {
+			return false;
+		}
+		if (this.rightCharacters == null && other.rightCharacters != null) {
+			return false;
+		}
+		else if (!this.rightCharacters.equals(other.rightCharacters)) {
+			return false;
+		}
+		return true;
+	}
+
 	private Character getCurrentCharacter() {
 		return this.currentCharacter;
 	}

@@ -12,37 +12,92 @@ import turingmachine.model.entities.Transition;
 
 public abstract class AbstractTuringMachine implements ITuringMachine {
 
-	private final String name;
-	private final Alphabet alphabet;
-
-	private final String initialStateName;
-	private final String inputTapeName;
-	private final String outputTapeName;
+	private String name;
+	private Alphabet alphabet;
+	private State initialState;
+	private Tape inputTape;
+	private Tape outputTape;
 
 	private final Map<String, State> states;
 	private final Map<String, Tape> tapes;
 	private final Map<State, Collection<Transition>> transitions;
 
-	public AbstractTuringMachine(String name, Alphabet alphabet, String initialStateName, String inputTapeName, String outputTapeName) {
-		this.name = name;
-		this.alphabet = alphabet;
+	private Boolean initialized;
 
-		this.initialStateName = initialStateName;
-		this.inputTapeName = inputTapeName;
-		this.outputTapeName = outputTapeName;
-
+	public AbstractTuringMachine() {
 		this.states = new LinkedHashMap<String, State>();
 		this.tapes = new LinkedHashMap<String, Tape>();
 		this.transitions = new LinkedHashMap<State, Collection<Transition>>();
+
+		this.setInitialized(Boolean.FALSE);
+	}
+
+	public final Boolean initialize(String name, Alphabet alphabet, State initialState, Tape inputTape, Tape outputTape) {
+		if (this.isInitialized()) {
+			return Boolean.FALSE;
+		}
+
+		this.name = name;
+		this.alphabet = alphabet;
+		this.initialState = initialState;
+		this.inputTape = inputTape;
+		this.outputTape = outputTape;
+
+		this.setInitialized(Boolean.TRUE);
+		this.reset();
+
+		return Boolean.TRUE;
 	}
 
 	@Override
-	public String getName() {
+	public final Boolean reset() {
+		if (!this.isInitialized()) {
+			return Boolean.FALSE;
+		}
+
+		return this.doReset();
+	}
+
+	@Override
+	public final Boolean transition() {
+		if (!this.isInitialized()) {
+			return Boolean.FALSE;
+		}
+
+		return this.doTransition();
+	}
+
+	protected abstract Boolean doReset();
+
+	protected abstract Boolean doTransition();
+
+	public final Boolean isInitialized() {
+		return this.initialized;
+	}
+
+	private final void setInitialized(Boolean initialized) {
+		this.initialized = initialized;
+	}
+
+	@Override
+	public final String getName() {
 		return this.name;
 	}
 
-	public Alphabet getAlphabet() {
+	public final Alphabet getAlphabet() {
 		return this.alphabet;
+	}
+
+	public final State getInitialState() {
+		return this.initialState;
+	}
+
+	public final Tape getInputTape() {
+		return this.inputTape;
+	}
+
+	public final Tape getOutputTape() {
+		return this.outputTape;
 	}
 
 	public Collection<State> getStates() {
@@ -137,18 +192,6 @@ public abstract class AbstractTuringMachine implements ITuringMachine {
 		}
 
 		return Boolean.TRUE;
-	}
-
-	public State getInitialState() {
-		return this.getState(this.initialStateName);
-	}
-
-	public Tape getInputTape() {
-		return this.getTape(this.inputTapeName);
-	}
-
-	public Tape getOutputTape() {
-		return this.getTape(this.outputTapeName);
 	}
 
 }

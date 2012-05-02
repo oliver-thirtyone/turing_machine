@@ -59,9 +59,18 @@ public class AbstractTuringMachineTest {
 
 	@Test
 	public void testAbstractTuringMachine() {
-		AbstractTuringMachine turingMachine = new TuringMachine("TuringConfigurationTest", this.alphabet, "initialState", "inputTape", "outputTape");
+		AbstractTuringMachine turingMachine = new TuringMachine();
+
+		Assert.assertFalse(turingMachine.reset());
+		Assert.assertFalse(turingMachine.transition());
+
+		Assert.assertTrue(turingMachine.initialize("AbstractTuringMachineTest", this.alphabet, this.initialState, this.inputTape, this.outputTape));
+		Assert.assertFalse(turingMachine.initialize("AbstractTuringMachineTest", this.alphabet, this.initialState, this.inputTape, this.outputTape));
 
 		Assert.assertEquals(this.alphabet, turingMachine.getAlphabet());
+		Assert.assertEquals(this.initialState, turingMachine.getInitialState());
+		Assert.assertEquals(this.inputTape, turingMachine.getInputTape());
+		Assert.assertEquals(this.outputTape, turingMachine.getOutputTape());
 
 		Assert.assertTrue(turingMachine.addState(this.initialState));
 		Assert.assertTrue(turingMachine.addState(this.finalState));

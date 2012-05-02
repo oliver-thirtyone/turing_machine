@@ -60,12 +60,12 @@ public class TuringRunnerTest {
 
 		// /////////////////////////////////////////////////////////////////////////////
 
-		Assert.assertTrue(this.turingRunner.init(this.turingMachineMock, "dummy input"));
+		Assert.assertTrue(this.turingRunner.initialize(this.turingMachineMock, "dummy input"));
 
 		Mockito.verify(this.turingRunnerObserverMock).update(this.observableTuringRunner, TuringRunnerMode.READY);
 		Mockito.reset(this.turingRunnerObserverMock);
 
-		Assert.assertFalse(this.turingRunner.init(this.turingMachineMock, "dummy input"));
+		Assert.assertFalse(this.turingRunner.initialize(this.turingMachineMock, "dummy input"));
 		Assert.assertFalse(this.turingRunner.pause());
 		Assert.assertFalse(this.turingRunner.stop());
 		Assert.assertEquals(TuringRunnerMode.READY, this.turingRunner.getMode());

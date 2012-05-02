@@ -15,19 +15,63 @@ public class TapeTransition {
 	}
 
 	public Tape getTape() {
-		return tape;
+		return this.tape;
 	}
 
 	public Character getRead() {
-		return read;
+		return this.read;
 	}
 
 	public Character getWrite() {
-		return write;
+		return this.write;
 	}
 
 	public TapeMotion getMotion() {
-		return motion;
+		return this.motion;
+	}
+
+	@Override
+	public int hashCode() {
+		int result = 1;
+		result = 31 * result + ((this.motion == null) ? 0 : this.motion.hashCode());
+		result = 31 * result + ((this.read == null) ? 0 : this.read.hashCode());
+		result = 31 * result + ((this.tape == null) ? 0 : this.tape.hashCode());
+		result = 31 * result + ((this.write == null) ? 0 : this.write.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null || this.getClass() != obj.getClass()) {
+			return false;
+		}
+
+		TapeTransition other = (TapeTransition) obj;
+		if (this.motion != other.motion) {
+			return false;
+		}
+		if (this.read == null && other.read != null) {
+			return false;
+		}
+		else if (!this.read.equals(other.read)) {
+			return false;
+		}
+		if (this.tape == null && other.tape != null) {
+			return false;
+		}
+		else if (!this.tape.equals(other.tape)) {
+			return false;
+		}
+		if (this.write == null && other.write != null) {
+			return false;
+		}
+		else if (!this.write.equals(other.write)) {
+			return false;
+		}
+		return true;
 	}
 
 }
